@@ -24,9 +24,6 @@ canvas_result = st_canvas(
     key="canvas",
 )
 
-# Do something interesting with the image data and paths
-if canvas_result.image_data is not None:
-    st.image(canvas_result.image_data)
 if canvas_result.json_data is not None:
     objects = pd.json_normalize(canvas_result.json_data["objects"]) # need to convert obj to str because PyArrow
     for col in objects.select_dtypes(include=['object']).columns:
