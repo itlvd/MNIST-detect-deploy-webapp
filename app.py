@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from keras.models import load_model
 import numpy as np
-from tensorflow.keras.layers import BatchNormalization
+
 # Specify canvas parameters in application
 stroke_width = st.sidebar.slider("Stroke width: ", 1, 5, 5)
 stroke_color = st.sidebar.color_picker("Stroke color hex: ")
