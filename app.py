@@ -3,9 +3,10 @@ from PIL import Image
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from keras.models import load_model
+import numpy as np
 
 # Specify canvas parameters in application
-stroke_width = st.sidebar.slider("Stroke width: ", 1, 28, 28)
+stroke_width = st.sidebar.slider("Stroke width: ", 1, 5, 5)
 stroke_color = st.sidebar.color_picker("Stroke color hex: ")
 bg_color = st.sidebar.color_picker("Background color hex: ", "#eee")
 
@@ -17,8 +18,8 @@ canvas_result = st_canvas(
     background_color=bg_color,
     background_image= None,
     update_streamlit=True,
-    height=28,
-    width=28,
+    height=112,
+    width=112,
     drawing_mode="freedraw",
     key="canvas",
 )
@@ -32,12 +33,39 @@ if canvas_result.json_data is not None:
         objects[col] = objects[col].astype("str")
     st.dataframe(objects)
 
+def convert2D(img):
+    image= []
+    D1 = len(img)
+    D2 = len(img[0])
+    for i1 in range(D1):
+        row = []
+        for i2 in range(D2):
+            number = int((img[i1][i2][0] + img[i1][i2][1]+img[i1][i2][2])/3)
+            ret = int((number + (-2*127.5))*-1)
+            if(ret > 127):
+                ret = 255
+            else:
+                ret = 0
+            row.append(ret)
+        image.append(row)
+    return np.array(image)
+
+def label(pred):
+    return np.argmax(pred)
+
+
 model = load_model('./data/mnist_model.h5')
-image = canvas_result.image_data[:,:,:3]
-st.write(image)
 if canvas_result.image_data is not None:
-    image = canvas_result.image_data[:,:,:0]
-    st.write(image.shape)
-    y_pred = model.predict(image)
+    imt = canvas_result.image_data[:,:,:3] #delete alpha channel
+    #convert hex color to rbg color
+    img = convert2D(imt)
+
+    img_pil = Image.fromarray(img)
+    img_28x28 = np.array(img_pil.resize((28, 28), Image.ANTIALIAS))
+
+    img_3d=img_28x28.reshape(-1,28,28)
+    im_resize=img_3d/255.0
+    y_pred = model.predict(im_resize)
     st.text("Predict: ")
+    st.write(label(y_pred))
     st.write(y_pred)
