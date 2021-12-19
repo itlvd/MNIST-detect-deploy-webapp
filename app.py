@@ -58,7 +58,6 @@ def scale112pxTo28Px(img):
         matrixRow = []
         for col in range(0,D2,4):
             subMatrix = img[row:row+4,col:col+4]
-            print(subMatrix.shape)
             meanOfMatrix =int(np.mean(subMatrix))
             if meanOfMatrix > 127:
                 meanOfMatrix = 255
