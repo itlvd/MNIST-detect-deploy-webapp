@@ -22,3 +22,4 @@ Then Enjoy!
 
 - [Kassem - Kaggle](https://www.kaggle.com/elcaiseri/mnist-simple-cnn-keras-accuracy-0-99-top-1/notebook)
 - [Streamlit.io](https://streamlit.io/)
+- [Streamlit Drawable Canvas](https://github.com/andfanilo/streamlit-drawable-canvas)
