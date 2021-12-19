@@ -6,9 +6,9 @@ from keras.models import load_model
 import numpy as np
 
 # Specify canvas parameters in application
-stroke_width = st.sidebar.slider("Stroke width: ", 1, 5, 5)
-stroke_color = st.sidebar.color_picker("Stroke color hex: ")
-bg_color = st.sidebar.color_picker("Background color hex: ", "#eee")
+stroke_width = 5
+stroke_color = "black"
+bg_color = "#eee"
 
 # Create a canvas component
 canvas_result = st_canvas(
@@ -50,6 +50,25 @@ def convert2D(img):
 def label(pred):
     return np.argmax(pred)
 
+def scale112pxTo28Px(img):
+    D1 = len(img)
+    D2 = len(img[0])
+    ret = []
+    img = np.array(img)
+    for row in range(0,D1,4):
+        matrixRow = []
+        for col in range(0,D2,4):
+            subMatrix = img[row:row+4,col:col+4]
+            print(subMatrix.shape)
+            meanOfMatrix =int(np.mean(subMatrix))
+            if meanOfMatrix > 127:
+                meanOfMatrix = 255
+            else:
+                meanOfMatrix = 0
+            matrixRow.append(meanOfMatrix)
+        ret.append(matrixRow)
+    return np.array(ret)
+
 
 model = load_model('./data/mnist_model.h5')
 if canvas_result.image_data is not None:
@@ -57,8 +76,7 @@ if canvas_result.image_data is not None:
     #convert hex color to rbg color
     img = convert2D(imt)
 
-    img_pil = Image.fromarray(img)
-    img_28x28 = np.array(img_pil.resize((28, 28), Image.ANTIALIAS))
+    img_28x28 = scale112pxTo28Px(img)
 
     img_3d=img_28x28.reshape(-1,28,28)
     im_resize=img_3d/255.0
