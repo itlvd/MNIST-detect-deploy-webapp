@@ -71,7 +71,7 @@ def scale112pxTo28Px(img):
 model = load_model('./data/mnist_model.h5')
 if canvas_result.image_data is not None:
     imt = canvas_result.image_data[:,:,:3] #delete alpha channel
-    #convert hex color to rbg color
+    #convert 3D image to 2D image
     img = convert2D(imt)
 
     img_28x28 = scale112pxTo28Px(img)
