@@ -4,7 +4,7 @@
 
 ## Installation
 
-Please make sure you install [Streamlit](https://docs.streamlit.io/library/get-started/installation#install-streamlit-on-windows)
+Please make sure you install [Streamlit](https://docs.streamlit.io/library/get-started/installation#install-streamlit-on-windows), then install Streamlit drawable canvas:
 
 ```shell script
 pip install streamlit-drawable-canvas 
